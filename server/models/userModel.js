@@ -7,6 +7,7 @@ const userModel = mongoose.Schema({
     },
     email: {
         type: String,
+        unique: true,
         required: true,
     },
     password: {
@@ -15,7 +16,6 @@ const userModel = mongoose.Schema({
     },
     pic: {
         type: String,
-        required: true,
         default: 'https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg'
     },
     isAdmin: {
@@ -25,4 +25,5 @@ const userModel = mongoose.Schema({
     }
 }, { timestamps: true })
 
-module.exports = mongoose.model('User', userModel)
+const User = mongoose.model('User', userModel)
+module.exports = User

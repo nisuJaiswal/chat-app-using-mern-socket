@@ -6,7 +6,11 @@ const cors = require('cors')
 const PORT = process.env.PORT || 5000
 const app = express()
 
+// Database Connection
 connectDataBase()
+
+// Middleware
+app.use(express.json())
 app.use(cors())
 
 // DEFAULT PATH
@@ -14,15 +18,7 @@ app.get('/', (req, res) => {
     res.send('Running Successfully')
 })
 
-// GET ALL CHATS
-app.get('/api/chats', (req, res) => {
-    res.send(chats)
-})
-
-// GET CHAT SINGLE BY ID
-app.get('/api/chats/:id', (req, res) => {
-    const chat = chats.find(chat => chat._id === req.params.id)
-    res.send(chat)
-})
+// USER ROUTES
+app.use('/api/user', require('./routes/userRoutes'))
 
 app.listen(PORT, () => console.log(`App is running on 'http://localhost:${PORT}'`))
