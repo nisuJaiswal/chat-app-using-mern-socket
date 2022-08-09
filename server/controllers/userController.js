@@ -58,7 +58,7 @@ const login = asyncHandler(async (req, res) => {
         res.json({ user, jwtToken: genToken(user._id) })
     }
     else {
-        res.status(400)
+        res.status(401)
         throw new Error('User not found or Password seems to be incorrect');
     }
 })
