@@ -1,6 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const genToken = require("../generateJWTToken");
 const User = require("../models/userModel");
+// const bcrypt = require('bcryptjs')
+
 
 // For Register a new user
 const register = asyncHandler(async (req, res) => {
@@ -35,4 +37,29 @@ const register = asyncHandler(async (req, res) => {
     }
 
 })
-module.exports = { register }
+
+// Login User
+const login = asyncHandler(async (req, res) => {
+
+    const { email, password } = req.body;
+    if (!email || !password) {
+        res.status(400)
+        throw new Error('Please fill all the fields');
+    }
+
+    // Checkin existing user
+    const user = await User.findOne({ email });
+    if (!user) {
+        res.status(400)
+        throw new Error('User not found');
+    }
+
+    if (user && (await user.comparePasswords(password))) {
+        res.json({ user, jwtToken: genToken(user._id) })
+    }
+    else {
+        res.status(400)
+        throw new Error('User not found or Password seems to be incorrect');
+    }
+})
+module.exports = { register, login }
