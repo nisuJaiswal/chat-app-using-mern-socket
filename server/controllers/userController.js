@@ -1,10 +1,10 @@
 const asyncHandler = require("express-async-handler");
 const genToken = require("../generateJWTToken");
 const User = require("../models/userModel");
-// const bcrypt = require('bcryptjs')
 
-
-// For Register a new user
+// @POST Request
+// @Route: /api/user/
+// @Description: Register User
 const register = asyncHandler(async (req, res) => {
     const { name, email, password, pic } = req.body;
 
@@ -38,7 +38,9 @@ const register = asyncHandler(async (req, res) => {
 
 })
 
-// Login User
+// @POST Request
+// @Route: /api/user/login
+// @Description: Login User
 const login = asyncHandler(async (req, res) => {
 
     const { email, password } = req.body;
@@ -62,4 +64,15 @@ const login = asyncHandler(async (req, res) => {
         throw new Error('User not found or Password seems to be incorrect');
     }
 })
-module.exports = { register, login }
+
+// @GET Request
+// @Route: /api/user?search='some text'
+// @Description: Search User
+const search = asyncHandler(async (req, res) => {
+    const { search } = req.query
+    const searchTerm = search ? search : '';
+
+    const users = await User.find({ $or: [{ name: { $regex: searchTerm, $options: 'i' } }, { email: { $regex: searchTerm, $options: 'i' } }] }).find({ _id: { $ne: req.user._id } });
+    res.json({ users })
+})
+module.exports = { register, login, search }
