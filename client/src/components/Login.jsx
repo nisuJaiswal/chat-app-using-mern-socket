@@ -47,9 +47,11 @@ const Login = () => {
             setLoading(false)
             history('/chat')
         } catch (error) {
+            console.log(error.response)
             toast({
-                title: "User doesn't exist",
-                status: "error",
+                title: "Error!",
+                description: error.response.data.message,
+                status: 'error',
                 duration: 5000,
                 isClosable: true,
                 position: "bottom",

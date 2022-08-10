@@ -137,7 +137,7 @@ const SignUp = () => {
 
         } catch (error) {
             toast({
-                title: "Error Occured!",
+                title: "Error!",
                 description: error.response.data.message,
                 status: "error",
                 duration: 5000,
