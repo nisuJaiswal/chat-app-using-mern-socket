@@ -75,4 +75,5 @@ const search = asyncHandler(async (req, res) => {
     const users = await User.find({ $or: [{ name: { $regex: searchTerm, $options: 'i' } }, { email: { $regex: searchTerm, $options: 'i' } }] }).find({ _id: { $ne: req.user._id } });
     res.json({ users })
 })
+
 module.exports = { register, login, search }

@@ -21,6 +21,7 @@ app.get('/', (req, res) => {
 
 // USER ROUTES
 app.use('/api/user', require('./routes/userRoutes'))
+app.use('/api/chat', require('./routes/chatRoutes'))
 
 app.use(errorHandlerMiddleware)
 
