@@ -128,7 +128,7 @@ const SignUp = () => {
                 duration: 3000,
                 isClosable: true,
             })
-            localStorage.setItem('Chat App User Details ', JSON.stringify(data))
+            localStorage.setItem('Chat App UserDetails', JSON.stringify(data))
             setLoading(false)
 
             history('/chat')
