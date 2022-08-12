@@ -1,6 +1,6 @@
 const express = require('express')
 const { authUser } = require('../middlewares/authenticationMiddleware')
-const { accessChats, getAllChats } = require('../controllers/chatController')
+const { accessChats, getAllChats, createGroupChat, renameGroupChat } = require('../controllers/chatController')
 const router = express.Router()
 
 
@@ -16,5 +16,21 @@ router.route('/')
     // @route  GET api/chat
     // @desc   Get all chats
     .get(authUser, getAllChats)
+
+
+
+// @POST Request
+// @route  POST api/chat/group
+// @desc   Create a group chat
+router.post('/group', authUser, createGroupChat)
+
+// @POST Request
+// @route  POST api/chat/rename
+// @desc   Rename a group chat
+router.post('/rename', renameGroupChat)
+// Add user to group chat
+// Delete user from gtoup chat
+
+
 
 module.exports = router
