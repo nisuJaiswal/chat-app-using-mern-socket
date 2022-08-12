@@ -1,10 +1,63 @@
-import { Avatar, Box, Button, Menu, MenuButton, MenuItem, MenuList, Text, Tooltip } from '@chakra-ui/react'
+import { Avatar, Box, Button, Drawer, DrawerBody, DrawerContent, DrawerHeader, DrawerOverlay, Input, Menu, MenuButton, MenuItem, MenuList, Text, Tooltip, useDisclosure, useToast } from '@chakra-ui/react'
 import { BellIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import { ChatState } from '../Context/ChatProvider'
+import ReUsableModal from './ReUsableModal'
+import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import axios from 'axios'
+import SkeletonLoading from './SkeletonLoading'
+// import Modal from './Modal'
 const Header = () => {
 
+    // States
+    const [searchTerm, setSearchTerm] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [searchResults, setSearchResults] = useState([])
+    const [afterSearchRes, setAfterSearchRes] = useState(false)
     // Complementry
     const { user } = ChatState()
+    const history = useNavigate()
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const toast = useToast()
+
+    // Functions
+    const handleLogOut = () => {
+        localStorage.removeItem("Chat App UserDetails")
+        history('/')
+    }
+    const onSearch = async () => {
+        if (!searchTerm) {
+            toast({
+                title: 'Search field is empty, Enter Something',
+                status: 'warning',
+                duration: 3000,
+                isClosable: true,
+            })
+            return
+        }
+        try {
+            setLoading(true)
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${user.jwtToken}`
+                }
+            }
+            const { data } = await axios.get(`/api/user?search=${searchTerm}`, config)
+            setSearchResults(data)
+            setLoading(false)
+            setAfterSearchRes(true)
+        } catch (error) {
+            toast({
+                title: 'Something went wrong',
+                description: error.response.data.message,
+                status: 'error',
+                duration: 3000,
+                isClosable: true,
+            })
+        }
+    }
+
+
     return (
         <>
             {/* Main Container */}
@@ -18,7 +71,7 @@ const Header = () => {
             >
                 {/* Left Side Search Button */}
                 <Tooltip label="Search for Users" hasArrow placement='bottom-end'>
-                    <Button>
+                    <Button onClick={onOpen}>
 
                         <i className="fa fa-search" aria-hidden="true"></i>
                         <Text p={2} display={{ base: 'none', md: 'flex' }}>
@@ -46,17 +99,57 @@ const Header = () => {
                     {/* Profile */}
                     <Menu >
                         <MenuButton as={Button} rightIcon={<ChevronDownIcon />} ml={2}>
-                            <Avatar size={'sm'} name={user.name} src={user.pic} />
+                            <Avatar size={'sm'} name={user.user.name} src={user.user.pic} />
                         </MenuButton>
                         <MenuList>
-                            <MenuItem>My Profile</MenuItem>
-                            <MenuItem>Log out</MenuItem>
+
+                            <ReUsableModal user={user}>
+                                <MenuItem>My Profile</MenuItem>
+                            </ReUsableModal>
+
+                            <MenuItem onClick={handleLogOut}>Log out</MenuItem>
                         </MenuList>
                     </Menu>
                 </Box>
             </Box>
+
+            <Drawer
+                isOpen={isOpen}
+                placement='left'
+                onClose={onClose}
+            >
+                <DrawerOverlay />
+                <DrawerContent>
+                    <DrawerHeader>Search Users</DrawerHeader>
+
+                    <DrawerBody>
+                        <Box display={'flex'} gap={2} mb={4}>
+
+                            <Input placeholder='Search here...' value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+                            <Button variant={'ghost'} colorScheme="blue" border={'1px solid blue'} onClick={onSearch} >
+                                Search
+                            </Button>
+                        </Box>
+                        {!afterSearchRes && <h4>Search For Users and See Results here</h4>}
+                        {
+
+                            loading ? (<SkeletonLoading />) : (
+                                searchResults.length > 0 ? (
+                                    searchResults.map(user => <h4>{user.name}</h4>)
+                                ) : (afterSearchRes && <h4>No Users Found</h4>)
+                            )
+                        }
+
+
+                    </DrawerBody>
+
+
+                </DrawerContent>
+            </Drawer>
         </>
     )
 }
+
+
 
 export default Header
