@@ -114,7 +114,6 @@ const createGroupChat = asyncHandler(async (req, res) => {
 // @POST Request
 // @route  POST api/chat/rename
 // @desc   Rename a group chat
-
 const renameGroupChat = asyncHandler(async (req, res) => {
     const { groupId, groupName } = req.body;
     if (!groupName) {
@@ -122,7 +121,8 @@ const renameGroupChat = asyncHandler(async (req, res) => {
         throw new Error("Group name is not recieved")
     }
     try {
-        const updatedChat = await Chat.findByIdAndUpdate(groupId, { chatName: groupName }, { new: true }).populate("users", "-password")
+        const updatedChat = await Chat.findByIdAndUpdate(groupId, { chatName: groupName }, { new: true })
+            .populate("users", "-password")
             .populate("groupAdmin", "-password");
         if (updatedChat) return res.status(200).json({ updatedChat })
 
@@ -135,4 +135,60 @@ const renameGroupChat = asyncHandler(async (req, res) => {
     }
 
 })
-module.exports = { accessChats, getAllChats, createGroupChat, renameGroupChat }
+
+// @POST Request
+// @route  POST api/chat/addtogroup
+// @desc   Add user to group chat
+const addUserToGroup = asyncHandler(async (req, res) => {
+
+    const { groupId, userId } = req.body
+
+    // Checking for admin because only admin can add user to group
+    const group = await Chat.findById(groupId)
+
+    if (req.user._id.toString() !== group.groupAdmin.toString()) {
+        res.status(401)
+        throw new Error("You are not admin of this group")
+    }
+
+    try {
+        const updatedChat = await Chat.findByIdAndUpdate(groupId, { $push: { users: userId } }, { new: true })
+            .populate("users", "-password")
+            .populate("groupAdmin", "-password");
+
+        if (updatedChat) return res.status(200).json(updatedChat)
+
+        res.status(400)
+        throw new Error("Chat cannot be created")
+    } catch (err) {
+        res.status(400)
+        throw new Error(err.message)
+    }
+})
+
+
+const removeUserFromGroup = asyncHandler(async (req, res) => {
+    const { groupId, userId } = req.body
+
+    // Checking for admin because only admin can remove user from group
+    const group = await Chat.findById(groupId)
+    if (req.user._id.toString() !== group.groupAdmin.toString()) {
+        res.status(401)
+        throw new Error("You are not admin of this group")
+    }
+
+    try {
+        const updatedChat = await Chat.findByIdAndUpdate(groupId, { $pull: { users: userId } }, { new: true })
+            .populate("users", "-password")
+            .populate("groupAdmin", "-password");
+
+        if (updatedChat) return res.status(200).json(updatedChat)
+
+        res.status(400)
+        throw new Error("Chat cannot be created")
+    } catch (err) {
+        res.status(400)
+        throw new Error(err.message)
+    }
+})
+module.exports = { accessChats, getAllChats, createGroupChat, renameGroupChat, addUserToGroup, removeUserFromGroup }
