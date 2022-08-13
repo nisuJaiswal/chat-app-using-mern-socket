@@ -32,7 +32,7 @@ const accessChats = asyncHandler(async (req, res) => {
     });
 
     if (isChat.length > 0) {
-        res.status(200).send(isChat)
+        res.status(200).send(isChat[0])
     }
     else {
         // Creating brand new Chat
@@ -44,7 +44,7 @@ const accessChats = asyncHandler(async (req, res) => {
             })
             const fullChat = await Chat.findOne({ _id: chat._id })
                 .populate('users', '-password')
-            res.status(200).send(fullChat)
+            res.status(200).json(fullChat)
 
         } catch (error) {
             res.status(400)
@@ -61,12 +61,21 @@ const accessChats = asyncHandler(async (req, res) => {
 // @desc   Get all chats
 const getAllChats = asyncHandler(async (req, res) => {
     try {
-
-        const foundChats = await Chat.find({ users: { $elemMatch: { $eq: req.user._id } } }).populate('users', '-password').populate('latestMessage').populate('groupAdmin', '-password').populate('latestMessage')
-        res.status(200).send(foundChats)
+        Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
+            .populate('users', '-password')
+            .populate('latestMessage')
+            .populate('groupAdmin', '-password')
+            .sort({ updatedAt: -1 })
+            .then(async (results) => {
+                results = await User.populate(results, {
+                    path: "latestMessage.sender",
+                    select: "name pic email",
+                });
+                res.status(200).send(results)
+            });
     } catch (error) {
         res.status(400)
-        throw new Error("Error in getting all chats")
+        throw new Error("Problem in database")
 
     }
 })

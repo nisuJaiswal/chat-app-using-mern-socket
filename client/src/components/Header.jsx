@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Drawer, DrawerBody, DrawerContent, DrawerHeader, DrawerOverlay, Input, Menu, MenuButton, MenuItem, MenuList, Text, Tooltip, useDisclosure, useToast } from '@chakra-ui/react'
+import { Avatar, Box, Button, Drawer, DrawerBody, DrawerContent, DrawerHeader, DrawerOverlay, Input, Menu, MenuButton, MenuItem, MenuList, Spinner, Text, Tooltip, useDisclosure, useToast } from '@chakra-ui/react'
 import { BellIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import { ChatState } from '../Context/ChatProvider'
 import ReUsableModal from './ReUsableModal'
@@ -7,6 +7,7 @@ import { useState } from 'react'
 import axios from 'axios'
 import SkeletonLoading from './SkeletonLoading'
 import SearchedUserSingle from './SearchedUserSingle'
+import { useEffect } from 'react'
 // import Modal from './Modal'
 const Header = () => {
 
@@ -15,8 +16,9 @@ const Header = () => {
     const [loading, setLoading] = useState(false)
     const [searchResults, setSearchResults] = useState([])
     const [afterSearchRes, setAfterSearchRes] = useState(false)
+    const [chatLoading, setChatLoading] = useState(false)
     // Complementry
-    const { user, selectedChat, setSelectedChat } = ChatState()
+    const { user, selectedChat, setSelectedChat, chats, setChats } = ChatState()
     const history = useNavigate()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const toast = useToast()
@@ -69,6 +71,8 @@ const Header = () => {
                 }
             }
             const { data } = await axios.post(`/api/chat`, { userId }, config)
+            // console.log("data", data._id)
+            if (!chats.find(chat => chat._id === data._id)) setChats([data, ...chats])
 
             setSelectedChat(data)
             setLoading(false)
@@ -77,7 +81,7 @@ const Header = () => {
             console.log(err)
             toast({
                 title: 'Something went wrong',
-                description: err.response.data.message,
+                description: "Something wrong in data",
                 status: 'error',
                 duration: 3000,
                 isClosable: true,
@@ -85,7 +89,9 @@ const Header = () => {
             setLoading(false)
         }
     }
-
+    useEffect(() => {
+        console.log(user.user._id)
+    }, [])
     return (
         <>
             {/* Main Container */}
@@ -164,12 +170,17 @@ const Header = () => {
 
                             loading ? (<SkeletonLoading />) : (
                                 searchResults.length > 0 ? (
-                                    searchResults.map(user => <SearchedUserSingle user={user} key={user._id} handleOnClickFunction={() => handleOnChatClick(user._id)} />)
+                                    searchResults.map(user => <SearchedUserSingle
+                                        user={user}
+                                        key={user._id}
+                                        handleOnClickFunction={() => handleOnChatClick(user._id)} />)
                                 ) : (afterSearchRes && <h4>No Users Found</h4>)
                             )
                         }
 
-
+                        {
+                            chatLoading && (<Spinner />)
+                        }
                     </DrawerBody>
 
 

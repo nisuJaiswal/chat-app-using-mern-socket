@@ -1,14 +1,17 @@
 import { ChatState } from "../Context/ChatProvider"
-import { useToast } from '@chakra-ui/react'
+import { Box, Button, Text, useToast, VStack } from '@chakra-ui/react'
 import axios from 'axios'
+import { AddIcon } from "@chakra-ui/icons"
 import { useEffect } from "react"
+import { getSenderName } from "../ChatLogic/ChatLogic"
 const Chats = () => {
     // Complementry
-    const { user, selectedChat, setSelectedChat, chat, setChat } = ChatState()
+    const { user, selectedChat, setSelectedChat, chats, setChats } = ChatState()
     const toast = useToast()
 
     // Functions
     const getChats = async () => {
+
         try {
             const config = {
                 headers: {
@@ -16,7 +19,7 @@ const Chats = () => {
                 }
             }
             const { data } = await axios.get('/api/chat', config)
-            console.log(data)
+            setChats(data)
         } catch (err) {
             toast({
                 title: 'Something went wrong',
@@ -27,13 +30,66 @@ const Chats = () => {
             })
         }
     }
+
+    // useEffects
     useEffect(() => {
         getChats()
     }, [])
 
     return (
 
-        <div> </div >
+        // Main Container
+        <Box
+            display={{ base: selectedChat ? "none" : "flex", md: "flex" }}
+            flexDirection="column"
+            alignItems="center"
+            p={2}
+            width={{ base: '100%', md: '33%' }}
+            bg="white"
+            m={2}
+            borderRadius="md"
+            height="87vh"
+        >
+            {/* Header */}
+            <Box display="flex"
+                fontSize={{ base: 'xl', md: '3xl' }}
+                justifyContent={'space-between'}
+                width='100%'
+                p={2}
+            >
+                My Chats
+
+                <Button colorScheme="blue" variant={'outline'} display="flex" alignItems={'center'}>
+                    <AddIcon mr={2} /> New Group Chat
+                </Button>
+            </Box>
+
+
+            {/* User Lists */}
+            <Box border={'2px solid red'} width='100%' height='100%' display="flex" flexDirection={'column'} p={2} overflowY="auto">
+                <VStack >
+                    {chats ? (
+                        chats.map(chat => (
+                            <Box
+                                p={2}
+                                m={1}
+                                bg={selectedChat ? "blue.500" : "gray.100"}
+                                color={selectedChat ? "white" : "black"}
+                                w={'100%'}
+                                key={chat._id}
+                            >
+                                <Text>{chat.isGroupChat ? (chat.name) :
+                                    getSenderName(user, chat.users)
+                                }
+                                </Text>
+                            </Box>
+                        ))
+                    ) : (
+                        "No Any Existing Chats"
+                    )}
+                </VStack>
+            </Box>
+        </Box>
     )
 }
 
