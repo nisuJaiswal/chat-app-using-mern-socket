@@ -12,7 +12,7 @@ const accessChats = asyncHandler(async (req, res) => {
     const { userId } = req.body;
 
     if (!userId) {
-        res.status(400)
+        res.status(401)
         throw new Error("User Id is not recieved")
     }
 
@@ -32,7 +32,7 @@ const accessChats = asyncHandler(async (req, res) => {
     });
 
     if (isChat.length > 0) {
-        res.status(200).json({ isChat })
+        res.status(200).send(isChat)
     }
     else {
         // Creating brand new Chat
@@ -44,7 +44,7 @@ const accessChats = asyncHandler(async (req, res) => {
             })
             const fullChat = await Chat.findOne({ _id: chat._id })
                 .populate('users', '-password')
-            res.status(200).json({ fullChat })
+            res.status(200).send(fullChat)
 
         } catch (error) {
             res.status(400)
@@ -63,7 +63,7 @@ const getAllChats = asyncHandler(async (req, res) => {
     try {
 
         const foundChats = await Chat.find({ users: { $elemMatch: { $eq: req.user._id } } }).populate('users', '-password').populate('latestMessage').populate('groupAdmin', '-password').populate('latestMessage')
-        res.status(200).json({ foundChats })
+        res.status(200).send(foundChats)
     } catch (error) {
         res.status(400)
         throw new Error("Error in getting all chats")

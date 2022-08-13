@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
+
 const SignUp = () => {
 
     // States
@@ -37,6 +38,8 @@ const SignUp = () => {
         }
 
         if (image.type === 'image/jpeg' || image.type === 'image/png') {
+
+
             const data = new FormData()
             data.append("file", image)
             data.append("upload_preset", "Chat-App")
@@ -193,7 +196,7 @@ const SignUp = () => {
             </InputGroup>
 
             {/* Submit */}
-            <Button w='100%' variant='outline' colorScheme='blue' fontWeight={500} style={{ marginTop: 14 }} onClick={onSubmit} isLoading={imageLoading || loading}>Sign Up</Button>
+            <Button w='100%' variant='outline' colorScheme='blue' fontWeight={500} style={{ marginTop: 14 }} onClick={onSubmit} isLoading={imageLoading || loading} >Sign Up</Button>
         </VStack>
 
 

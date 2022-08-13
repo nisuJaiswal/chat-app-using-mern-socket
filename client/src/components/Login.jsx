@@ -81,7 +81,7 @@ const Login = () => {
             </FormControl>
 
             {/* Login Button */}
-            <Button w='100%' colorScheme='blue' variant='outline' fontWeight={500} style={{ marginTop: 14 }} isLoading={loading} onClick={handleSubmit}>Login</Button>
+            <Button w='100%' colorScheme='blue' variant='outline' fontWeight={500} style={{ marginTop: 14 }} isLoading={loading} onClick={handleSubmit} >Login</Button>
 
             {/* Guest User Button */}
             <Button w='100%' colorScheme='red' variant='outline' fontWeight={500} style={{ marginTop: 14 }}

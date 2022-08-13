@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import axios from 'axios'
 import SkeletonLoading from './SkeletonLoading'
+import SearchedUserSingle from './SearchedUserSingle'
 // import Modal from './Modal'
 const Header = () => {
 
@@ -15,7 +16,7 @@ const Header = () => {
     const [searchResults, setSearchResults] = useState([])
     const [afterSearchRes, setAfterSearchRes] = useState(false)
     // Complementry
-    const { user } = ChatState()
+    const { user, selectedChat, setSelectedChat } = ChatState()
     const history = useNavigate()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const toast = useToast()
@@ -25,6 +26,7 @@ const Header = () => {
         localStorage.removeItem("Chat App UserDetails")
         history('/')
     }
+
     const onSearch = async () => {
         if (!searchTerm) {
             toast({
@@ -57,6 +59,32 @@ const Header = () => {
         }
     }
 
+    const handleOnChatClick = async (userId) => {
+        setLoading(true)
+        try {
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${user.jwtToken}`,
+                    "Content-Type": 'application/json',
+                }
+            }
+            const { data } = await axios.post(`/api/chat`, { userId }, config)
+
+            setSelectedChat(data)
+            setLoading(false)
+            onClose()
+        } catch (err) {
+            console.log(err)
+            toast({
+                title: 'Something went wrong',
+                description: err.response.data.message,
+                status: 'error',
+                duration: 3000,
+                isClosable: true,
+            })
+            setLoading(false)
+        }
+    }
 
     return (
         <>
@@ -67,7 +95,7 @@ const Header = () => {
                 justifyContent={"space-between"}
                 width={"100%"}
                 bg={"white"}
-                p={1}
+                p={3}
             >
                 {/* Left Side Search Button */}
                 <Tooltip label="Search for Users" hasArrow placement='bottom-end'>
@@ -117,12 +145,13 @@ const Header = () => {
                 isOpen={isOpen}
                 placement='left'
                 onClose={onClose}
+
             >
                 <DrawerOverlay />
                 <DrawerContent>
                     <DrawerHeader>Search Users</DrawerHeader>
 
-                    <DrawerBody>
+                    <DrawerBody p={2}>
                         <Box display={'flex'} gap={2} mb={4}>
 
                             <Input placeholder='Search here...' value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
@@ -135,7 +164,7 @@ const Header = () => {
 
                             loading ? (<SkeletonLoading />) : (
                                 searchResults.length > 0 ? (
-                                    searchResults.map(user => <h4>{user.name}</h4>)
+                                    searchResults.map(user => <SearchedUserSingle user={user} key={user._id} handleOnClickFunction={() => handleOnChatClick(user._id)} />)
                                 ) : (afterSearchRes && <h4>No Users Found</h4>)
                             )
                         }
