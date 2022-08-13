@@ -18,7 +18,7 @@ const Header = () => {
     const [afterSearchRes, setAfterSearchRes] = useState(false)
     const [chatLoading, setChatLoading] = useState(false)
     // Complementry
-    const { user, selectedChat, setSelectedChat, chats, setChats } = ChatState()
+    const { user, setSelectedChat, chats, setChats } = ChatState()
     const history = useNavigate()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const toast = useToast()
@@ -63,6 +63,7 @@ const Header = () => {
 
     const handleOnChatClick = async (userId) => {
         setLoading(true)
+        setChatLoading(true)
         try {
             const config = {
                 headers: {
@@ -71,14 +72,15 @@ const Header = () => {
                 }
             }
             const { data } = await axios.post(`/api/chat`, { userId }, config)
-            // console.log("data", data._id)
+            // if (!chats.find(chat => chat._id === data._id)) setChats([data, ...chats])
             if (!chats.find(chat => chat._id === data._id)) setChats([data, ...chats])
+
 
             setSelectedChat(data)
             setLoading(false)
+            setChatLoading(false)
             onClose()
         } catch (err) {
-            console.log(err)
             toast({
                 title: 'Something went wrong',
                 description: "Something wrong in data",
@@ -86,12 +88,11 @@ const Header = () => {
                 duration: 3000,
                 isClosable: true,
             })
+            setChatLoading(false)
             setLoading(false)
         }
     }
-    useEffect(() => {
-        console.log(user.user._id)
-    }, [])
+
     return (
         <>
             {/* Main Container */}
