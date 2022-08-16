@@ -9,23 +9,23 @@ const ReUsableModal = ({ user, children }) => {
                 children ? (
                     <span onClick={onOpen}>{children}</span>
                 ) : (
-                    <IconButton aria-label='Search database' icon={<ViewIcon />} />
+                    <IconButton aria-label='Search database' onClick={onOpen} icon={<ViewIcon />} />
                 )}
 
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader fontSize={{ base: '2xl', md: '3xl' }} textAlign={"center"}>
-                        {user.user.name}
+                        {user.name}
                     </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody display="flex" flexDirection={'column'} alignItems="center" justifyContent={'center'}>
 
 
-                        <Image src={user.user.pic} boxSize='250px' align={'center'} borderRadius="full" alt={`${user.user.name}'s Image`} mb={2} />
+                        <Image src={user.pic} boxSize='250px' align={'center'} borderRadius="full" alt={`${user.name}'s Image`} mb={2} />
 
                         <Text fontSize="xl" mt={2}>
-                            Email: {user.user.email}
+                            Email: {user.email}
                         </Text>
                     </ModalBody>
 

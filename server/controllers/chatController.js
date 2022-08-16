@@ -44,7 +44,7 @@ const accessChats = asyncHandler(async (req, res) => {
             })
             const fullChat = await Chat.findOne({ _id: chat._id })
                 .populate('users', '-password')
-            res.status(200).json(fullChat)
+            res.status(200).send(fullChat)
 
         } catch (error) {
             res.status(400)
@@ -133,7 +133,7 @@ const renameGroupChat = asyncHandler(async (req, res) => {
         const updatedChat = await Chat.findByIdAndUpdate(groupId, { chatName: groupName }, { new: true })
             .populate("users", "-password")
             .populate("groupAdmin", "-password");
-        if (updatedChat) return res.status(200).json({ updatedChat })
+        if (updatedChat) return res.status(200).send({ updatedChat })
 
         res.status(400)
         throw new Error("Chat not found")
@@ -165,7 +165,7 @@ const addUserToGroup = asyncHandler(async (req, res) => {
             .populate("users", "-password")
             .populate("groupAdmin", "-password");
 
-        if (updatedChat) return res.status(200).json(updatedChat)
+        if (updatedChat) return res.status(200).send(updatedChat)
 
         res.status(400)
         throw new Error("Chat cannot be created")
@@ -191,7 +191,7 @@ const removeUserFromGroup = asyncHandler(async (req, res) => {
             .populate("users", "-password")
             .populate("groupAdmin", "-password");
 
-        if (updatedChat) return res.status(200).json(updatedChat)
+        if (updatedChat) return res.status(200).send(updatedChat)
 
         res.status(400)
         throw new Error("Chat cannot be created")

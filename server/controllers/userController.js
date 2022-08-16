@@ -29,7 +29,13 @@ const register = asyncHandler(async (req, res) => {
 
     if (user) {
         res.status(200)
-        res.json({ user, jwtToken: genToken(user._id) })
+        res.json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
+            pic: user.pic, jwtToken: genToken(user._id)
+        })
     }
     else {
         res.status(400)
@@ -57,7 +63,13 @@ const login = asyncHandler(async (req, res) => {
     }
 
     if (user && (await user.comparePasswords(password))) {
-        res.json({ user, jwtToken: genToken(user._id) })
+        res.json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
+            pic: user.pic, jwtToken: genToken(user._id)
+        })
     }
     else {
         res.status(401)

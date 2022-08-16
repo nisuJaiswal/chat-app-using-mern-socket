@@ -7,7 +7,7 @@ import { getSenderName } from "../ChatLogic/ChatLogic"
 import GroupChatModal from "./GroupChatModal"
 const Chats = () => {
     // Complementry
-    const { user, selectedChat, setSelectedChat, chats, setChats } = ChatState()
+    const { user, selectedChat, setSelectedChat, chats, setChats, fetchAgain } = ChatState()
     const toast = useToast()
 
     // Functions
@@ -35,7 +35,7 @@ const Chats = () => {
     // useEffects
     useEffect(() => {
         getChats()
-    }, [])
+    }, [fetchAgain])
 
     return (
 
@@ -88,7 +88,7 @@ const Chats = () => {
                                     key={chat._id}
                                 >
 
-                                    <Text>{chat.isGroupChat ? (chat.chatName) :
+                                    <Text p={2}>{chat.isGroupChat ? (chat.chatName) :
                                         getSenderName(user, chat.users)
                                     }
                                     </Text>
