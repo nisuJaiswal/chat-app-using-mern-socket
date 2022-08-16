@@ -34,7 +34,6 @@ const Chats = () => {
     // useEffects
     useEffect(() => {
         getChats()
-        // console.log(chats.length > 0 ? "Yes" : "No")
     }, [])
 
     return (
@@ -67,26 +66,30 @@ const Chats = () => {
 
 
             {/* User Lists */}
-            <Box border={'2px solid red'} width='100%' height='100%' display="flex" flexDirection={'column'} p={2} overflowY="auto">
+            <Box width='100%' height='100%' display="flex" flexDirection={'column'} p={2} overflowY="auto">
                 <VStack >
                     {chats.length > 0 ? (
-                        chats.map(chat => (
-                            <Box
-                                onClick={() => setSelectedChat(chat)}
-                                cursor="pointer"
-                                p={2}
-                                m={1}
-                                bg={selectedChat === chat ? "blue.500" : "gray.100"}
-                                color={selectedChat === chat ? "white" : "black"}
-                                w={'100%'}
-                                key={chat._id}
-                            >
-                                <Text>{chat.isGroupChat ? (chat.name) :
-                                    getSenderName(user, chat.users)
-                                }
-                                </Text>
-                            </Box>
-                        ))
+                        chats.map(chat => {
+
+                            return (
+                                <Box
+                                    onClick={() => setSelectedChat(chat)}
+                                    cursor="pointer"
+                                    p={2}
+                                    m={1}
+                                    bg={selectedChat?._id === chat?._id ? "blue.500" : "gray.100"}
+                                    color={selectedChat?._id === chat?._id ? "white" : "black"}
+                                    w={'100%'}
+                                    key={chat._id}
+                                >
+
+                                    <Text>{chat.isGroupChat ? (chat.name) :
+                                        getSenderName(user, chat.users)
+                                    }
+                                    </Text>
+                                </Box>
+                            )
+                        })
                     ) : (
                         <Text fontSize={'xl'} color={'black'}>
 

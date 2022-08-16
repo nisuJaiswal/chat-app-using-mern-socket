@@ -7,8 +7,6 @@ import { useState } from 'react'
 import axios from 'axios'
 import SkeletonLoading from './SkeletonLoading'
 import SearchedUserSingle from './SearchedUserSingle'
-import { useEffect } from 'react'
-// import Modal from './Modal'
 const Header = () => {
 
     // States
@@ -72,8 +70,9 @@ const Header = () => {
                 }
             }
             const { data } = await axios.post(`/api/chat`, { userId }, config)
-            // if (!chats.find(chat => chat._id === data._id)) setChats([data, ...chats])
-            if (!chats.find(chat => chat._id === data._id)) setChats([data, ...chats])
+            if (!chats.find(chat => chat._id === data._id)) {
+                setChats([data, ...chats])
+            }
 
 
             setSelectedChat(data)
