@@ -4,6 +4,7 @@ import axios from 'axios'
 import { AddIcon } from "@chakra-ui/icons"
 import { useEffect } from "react"
 import { getSenderName } from "../ChatLogic/ChatLogic"
+import GroupChatModal from "./GroupChatModal"
 const Chats = () => {
     // Complementry
     const { user, selectedChat, setSelectedChat, chats, setChats } = ChatState()
@@ -59,9 +60,13 @@ const Chats = () => {
             >
                 My Chats
 
-                <Button colorScheme="blue" variant={'outline'} display="flex" alignItems={'center'}>
-                    <AddIcon mr={2} /> New Group Chat
-                </Button>
+                {/* Create Group Chat */}
+                <GroupChatModal>
+
+                    <Button colorScheme="blue" variant={'outline'} display="flex" alignItems={'center'}>
+                        <AddIcon mr={2} /> New Group Chat
+                    </Button>
+                </GroupChatModal>
             </Box>
 
 
@@ -83,7 +88,7 @@ const Chats = () => {
                                     key={chat._id}
                                 >
 
-                                    <Text>{chat.isGroupChat ? (chat.name) :
+                                    <Text>{chat.isGroupChat ? (chat.chatName) :
                                         getSenderName(user, chat.users)
                                     }
                                     </Text>

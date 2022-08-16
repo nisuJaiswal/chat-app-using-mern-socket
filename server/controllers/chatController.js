@@ -112,7 +112,7 @@ const createGroupChat = asyncHandler(async (req, res) => {
         const fullChat = await Chat.findOne({ _id: chat._id })
             .populate('users', '-password')
             .populate('groupAdmin', '-password')
-        res.status(200).json({ fullChat })
+        res.status(200).send(fullChat)
 
     } catch (error) {
         res.status(400)
