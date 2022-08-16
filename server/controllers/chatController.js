@@ -133,7 +133,7 @@ const renameGroupChat = asyncHandler(async (req, res) => {
         const updatedChat = await Chat.findByIdAndUpdate(groupId, { chatName: groupName }, { new: true })
             .populate("users", "-password")
             .populate("groupAdmin", "-password");
-        if (updatedChat) return res.status(200).send({ updatedChat })
+        if (updatedChat) return res.status(200).send(updatedChat)
 
         res.status(400)
         throw new Error("Chat not found")
@@ -197,7 +197,7 @@ const removeUserFromGroup = asyncHandler(async (req, res) => {
         throw new Error("Chat cannot be created")
     } catch (err) {
         res.status(400)
-        throw new Error(err.message)
+        throw new Error(err)
     }
 })
 module.exports = { accessChats, getAllChats, createGroupChat, renameGroupChat, addUserToGroup, removeUserFromGroup }

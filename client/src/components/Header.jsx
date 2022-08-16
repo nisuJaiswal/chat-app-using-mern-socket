@@ -133,7 +133,7 @@ const Header = () => {
                     {/* Profile */}
                     <Menu >
                         <MenuButton as={Button} rightIcon={<ChevronDownIcon />} ml={2}>
-                            <Avatar size={'sm'} name={user.user.name} src={user.user.pic} />
+                            <Avatar size={'sm'} name={user.name} src={user.pic} />
                         </MenuButton>
                         <MenuList>
 
