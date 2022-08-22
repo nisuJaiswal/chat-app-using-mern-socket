@@ -15,9 +15,11 @@ const ChatArea = () => {
                 height='87vh'
                 bg="white"
                 borderRadius={'md'}
+                justifyContent='center'
                 m={2}
                 flexDirection='column'
                 p={4}
+                overflowY='hidden'
 
             >
                 <SingleChat />

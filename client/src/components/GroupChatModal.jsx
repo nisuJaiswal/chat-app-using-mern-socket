@@ -5,7 +5,7 @@ import { ChatState } from "../Context/ChatProvider"
 import SearchedUserSingle from "./SearchedUserSingle"
 import UserBadge from "./UserBadge"
 
-const GroupChatModal = ({ children }) => {
+const GroupChatModal = ({ children, fetchMessages }) => {
 
     // States
     const [groupName, setGroupName] = useState('')
@@ -91,6 +91,7 @@ const GroupChatModal = ({ children }) => {
                 users: JSON.stringify(selectedUsers.map(u => u._id))
             }
                 , config)
+            fetchMessages()
             setChats([data, ...chats])
             onClose()
         } catch (err) {
