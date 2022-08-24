@@ -7,12 +7,19 @@ import ReUsableModal from './ReUsableModal'
 import UpdateGroupChatModal from "./UpdateGroupChatModal"
 import axios from 'axios'
 import { useEffect } from "react"
+import io from 'socket.io-client'
 import MessageContainer from "./MessageContainer"
+
+// Socket Io Implementation
+const END_POINT = 'http://localhost:3001'
+var socket, selectedChatCompare
+
 const SingleChat = () => {
     // States
     const [newMessage, setNewMessage] = useState('')
     const [messages, setMessages] = useState([])
     const [loading, setLoading] = useState(false)
+    const [setSocketConnected, setSetSocketConnected] = useState(false)
     // Complementry
     const { selectedChat, user, setSelectedChat } = ChatState()
     const toast = useToast()
@@ -33,6 +40,8 @@ const SingleChat = () => {
                     content: newMessage,
                     chatId: selectedChat._id,
                 }, config)
+
+                socket.emit('new message', data)
                 setMessages([...messages, data])
             } catch (err) {
                 toast({
@@ -65,9 +74,9 @@ const SingleChat = () => {
             setLoading(true)
             const { data } = await axios.get(`/api/message/${selectedChat._id}`, config)
             setMessages(data)
-            console.log(data)
-
             setLoading(false)
+
+            socket.emit('join room', selectedChat._id)
         } catch (err) {
             toast({
                 title: "Error",
@@ -82,10 +91,26 @@ const SingleChat = () => {
 
     useEffect(() => {
         fetchMessages()
-
+        selectedChatCompare = selectedChat
     }, [selectedChat])
 
+    // For socket.io
+    useEffect(() => {
+        socket = io(END_POINT)
+        socket.emit('setup', user)
+        socket.on('connection', () => setSocketConnected(true))
+    }, [])
 
+    useEffect(() => {
+
+        socket.on('message recieved', (newMessageRecieved) => {
+            if (!selectedChatCompare || selectedChatCompare._id !== newMessageRecieved.chat._id) {
+                // Give Notification
+            } else {
+                setMessages([...messages, newMessageRecieved])
+            }
+        })
+    })
     return (
         <>
             {
@@ -132,6 +157,7 @@ const SingleChat = () => {
                             justifyContent='flex-end'
                             borderRadius={'md'}
                             overflowY='hidden'
+                            padding={'10px'}
 
                         >
                             {
