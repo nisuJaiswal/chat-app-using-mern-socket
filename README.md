@@ -2,9 +2,9 @@
 ##### Link: https://lets-gochat.herokuapp.com/chat
 A Web Application that provides the basic functionality of chatting, made with following technogolies: 
 
-###Frontend: ReactJs, socket.io-client
-###Backend: NodeJs, ExpressJs, Socket.io
-###Database: MongoDB
+### Frontend: ReactJs, socket.io-client
+### Backend: NodeJs, ExpressJs, Socket.io
+### Database: MongoDB
 
 Run the following commands to run: 
 ```bash
