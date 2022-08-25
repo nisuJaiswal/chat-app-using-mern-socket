@@ -1,11 +1,15 @@
 import { ViewIcon } from "@chakra-ui/icons"
 import { Button, IconButton, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure } from "@chakra-ui/react"
+import { useEffect } from "react"
 
 const ReUsableModal = ({ user, children }) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
+
+
     return (
         <>
             {
+
                 children ? (
                     <span onClick={onOpen}>{children}</span>
                 ) : (
@@ -22,7 +26,7 @@ const ReUsableModal = ({ user, children }) => {
                     <ModalBody display="flex" flexDirection={'column'} alignItems="center" justifyContent={'center'}>
 
 
-                        <Image src={user.pic} boxSize='250px' align={'center'} borderRadius="full" alt={`${user.name}'s Image`} mb={2} />
+                        <Image src={user.pic} boxSize='250px' align={'center'} borderRadius="full" alt={`${user}'s Image`} mb={2} />
 
                         <Text fontSize="xl" mt={2}>
                             Email: {user.email}

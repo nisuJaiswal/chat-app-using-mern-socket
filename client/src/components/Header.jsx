@@ -7,6 +7,7 @@ import { useState } from 'react'
 import axios from 'axios'
 import SkeletonLoading from './SkeletonLoading'
 import SearchedUserSingle from './SearchedUserSingle'
+import { getSenderName } from '../ChatLogic/ChatLogic'
 const Header = () => {
 
     // States
@@ -16,7 +17,7 @@ const Header = () => {
     const [afterSearchRes, setAfterSearchRes] = useState(false)
     const [chatLoading, setChatLoading] = useState(false)
     // Complementry
-    const { user, setSelectedChat, chats, setChats } = ChatState()
+    const { user, setSelectedChat, chats, setChats, notifications, setNotifications } = ChatState()
     const history = useNavigate()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const toast = useToast()
@@ -127,7 +128,28 @@ const Header = () => {
                         <MenuButton>
                             <BellIcon fontSize={'2xl'} />
                         </MenuButton>
-                        {/* <MenuList></MenuList> */}
+
+                        <MenuList pl={1}>
+                            {/* If No Notifications */}
+                            {!notifications.length && "No Any Notifications"}
+
+                            {/* If Notifications */}
+                            {
+                                notifications && notifications.map((notif) => (
+                                    <MenuItem key={notif._id} onClick={() => {
+                                        setSelectedChat(notif.chat)
+                                        setNotifications(notifications.filter(
+                                            (nt) => nt !== notif))
+                                    }}>
+                                        {notif.chat.isGroupChat ?
+                                            `New Notifications in ${notif.chat.chatName}`
+                                            :
+                                            `New Notifications in ${getSenderName(user, notif.chat.users)}`
+                                        }
+                                    </MenuItem>
+                                ))
+                            }
+                        </MenuList>
                     </Menu>
 
                     {/* Profile */}

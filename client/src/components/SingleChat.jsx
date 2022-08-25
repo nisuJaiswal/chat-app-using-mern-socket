@@ -36,8 +36,9 @@ const SingleChat = () => {
     const [typing, setTyping] = useState(false)
     const [isTyping, setIsTyping] = useState(false)
     // Complementry
-    const { selectedChat, user, setSelectedChat, notifications, setNotifications } = ChatState()
+    const { selectedChat, user, setSelectedChat, notifications, setNotifications, fetchAgain, setFetchAgain } = ChatState()
     const toast = useToast()
+
 
     //Functions
     const sendMessage = async (e) => {
@@ -122,7 +123,9 @@ const SingleChat = () => {
 
     useEffect(() => {
         fetchMessages()
+        // console.log("selectedChat", selectedChat)
         selectedChatCompare = selectedChat
+        // console.log('Selected Chat COmpare', selectedChatCompare)
     }, [selectedChat])
 
     // For socket.io
@@ -134,12 +137,18 @@ const SingleChat = () => {
         socket.on('typing stopped', () => setIsTyping(false))
     }, [])
 
+    // console.log(notifications, '------------------------')
     useEffect(() => {
-
         socket.on('message recieved', (newMessageRecieved) => {
             if (!selectedChatCompare || selectedChatCompare._id !== newMessageRecieved.chat._id) {
                 // Give Notification
-
+                // console.log("Inside Message recieved if");
+                if (!notifications.includes(newMessageRecieved)) {
+                    setNotifications([newMessageRecieved, ...notifications])
+                    setFetchAgain(!fetchAgain)
+                    // console.log(selectedChatCompare)
+                    // console.log(notifications)
+                }
             } else {
                 setMessages([...messages, newMessageRecieved])
             }
@@ -178,6 +187,7 @@ const SingleChat = () => {
                                 <>
                                     {getSenderName(user, selectedChat.users)}
                                     <ReUsableModal user={getFullUser(user, selectedChat?.users)} />
+
                                 </>
                             )}
                         </Text>

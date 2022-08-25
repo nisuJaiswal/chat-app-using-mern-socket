@@ -45,11 +45,9 @@ const Home = () => {
                     <TabPanels>
                         <TabPanel>
                             <Login />
-                            {/* Login */}
                         </TabPanel>
                         <TabPanel>
                             <SignUp />
-                            {/* Sign Up */}
                         </TabPanel>
 
                     </TabPanels>

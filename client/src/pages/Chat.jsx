@@ -18,6 +18,7 @@ const Chat = () => {
             console.log("Inside if")
             history('/')
         }
+        // setUser can be implemented
     }, [history, user, fetchedUser])
 
     return (
