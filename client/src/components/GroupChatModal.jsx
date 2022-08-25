@@ -92,17 +92,19 @@ const GroupChatModal = ({ children, fetchMessages }) => {
             }
                 , config)
             fetchMessages()
+            console.log(data)
             setChats([data, ...chats])
             onClose()
         } catch (err) {
             toast({
                 title: 'Something went wrong',
-                description: err.response.data.message,
+                description: err,
                 status: 'error',
                 duration: 3000,
                 isClosable: true,
 
             })
+            console.log(err)
         }
 
     }

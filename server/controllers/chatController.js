@@ -75,7 +75,7 @@ const getAllChats = asyncHandler(async (req, res) => {
             });
     } catch (error) {
         res.status(400)
-        throw new Error("Problem in database")
+        throw new Error("Problem in backend")
 
     }
 })
@@ -116,6 +116,7 @@ const createGroupChat = asyncHandler(async (req, res) => {
 
     } catch (error) {
         res.status(400)
+        console.log(error)
         throw new Error(error.message)
     }
 })

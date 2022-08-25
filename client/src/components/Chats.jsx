@@ -66,7 +66,7 @@ const Chats = () => {
                 My Chats
 
                 {/* Create Group Chat */}
-                <GroupChatModal>
+                <GroupChatModal fetchMessages={getChats}>
 
                     <Button colorScheme="blue" variant={'outline'} display="flex" alignItems={'center'}>
                         <AddIcon mr={2} /> New Group Chat
@@ -80,7 +80,6 @@ const Chats = () => {
                 <VStack >
                     {chats.length > 0 ? (
                         chats.map(chat => {
-
                             return (
                                 <Box
                                     onClick={() => setSelectedChat(chat)}
@@ -91,12 +90,37 @@ const Chats = () => {
                                     color={selectedChat?._id === chat?._id ? "white" : "black"}
                                     w={'100%'}
                                     key={chat._id}
+                                    borderRadius={'lg'}
+
                                 >
 
-                                    <Text p={2}>{chat.isGroupChat ? (chat.chatName) :
-                                        getSenderName(user, chat.users)
-                                    }
+                                    <Text pl={1} fontSize={{ base: 'sm', md: 'md' }}>
+                                        {chat.isGroupChat ? (chat.chatName) : getSenderName(user, chat.users)}
                                     </Text>
+
+                                    {chat.latestMessage &&
+                                        !chat.isGroupChat ?
+                                        <Text pl={1} mt={1} fontSize={{ base: 'sm', md: 'sm' }}>
+
+                                            <span style={{ marginLeft: 3, fontSize: '14px' }}>
+
+                                                {chat.latestMessage?.content}
+                                            </span>
+                                        </Text> :
+                                        <Text pl={1} mt={1} fontSize={{ base: 'sm', md: 'sm' }}>
+                                            <b>
+                                                {chat.latestMessage?.sender?.name === user.name ? "You:" : chat.latestMessage?.sender?.name && chat.latestMessage.sender.name + ":"}
+                                            </b>
+                                            <span style={{ marginLeft: 3, fontSize: '14px' }}>
+
+                                                {chat.latestMessage?.content}
+                                            </span>
+                                        </Text>
+
+                                    }
+
+
+
                                 </Box>
                             )
                         })
@@ -107,8 +131,8 @@ const Chats = () => {
                         </Text>
                     )}
                 </VStack>
-            </Box>
-        </Box>
+            </Box >
+        </Box >
     )
 }
 
