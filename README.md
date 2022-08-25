@@ -26,4 +26,4 @@ npm run dev
 - Get RealTime Notifications
 
 **Developed By:**
-[https://github.com/nisuJaiswal]Nisarg Jaiswal
+[Nisarg Jaiswal](https://github.com/nisuJaiswal)
