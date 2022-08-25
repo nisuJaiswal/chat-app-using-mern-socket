@@ -106,6 +106,4 @@ const chats = [
         },
     },
 ];
-// export { chats }
-// export default chats
 module.exports = { chats }

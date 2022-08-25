@@ -1,10 +1,9 @@
 const express = require('express')
 require('dotenv').config()
 const connectDataBase = require('./config')
-const { chats } = require('./data/data.js')
 const cors = require('cors')
 const { errorHandlerMiddleware } = require('./middlewares/errorMiddleware')
-// const { isLastMessage } = require('../client/src/ChatLogic/ChatLogic')
+const path = require('path')
 
 const PORT = process.env.PORT || 5000
 const app = express()
@@ -16,10 +15,6 @@ connectDataBase()
 app.use(express.json())
 app.use(cors())
 
-// DEFAULT PATH
-app.get('/', (req, res) => {
-    res.send('Running Successfully')
-})
 
 // USER ROUTES
 app.use('/api/user', require('./routes/userRoutes'))
@@ -27,6 +22,24 @@ app.use('/api/user', require('./routes/userRoutes'))
 app.use('/api/chat', require('./routes/chatRoutes'))
 // MESSAGE ROUTES
 app.use('/api/message', require('./routes/messageRoutes'))
+
+
+// Deployment
+const __dirNameCustom = path.resolve();
+if (process.env.NODE_ENV === 'deployment') {
+    app.use(express.static(path.join(__dirNameCustom, '/client/build')))
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirNameCustom, "client", "build", "index.html"))
+    })
+} else {
+    app.get('/', (req, res) => {
+        res.send('Running Successfully')
+    })
+}
+
+
+
 
 // MIDDLEWARES
 app.use(errorHandlerMiddleware)
@@ -52,7 +65,7 @@ io.on('connection', (socket) => {
 
     socket.on('join room', (room) => {
         socket.join(room)
-        console.log("user joined room", room)
+        // console.log("user joined room", room)
     })
 
     socket.on('new message', newMessageRecieved => {

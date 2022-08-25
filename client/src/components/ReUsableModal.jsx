@@ -1,6 +1,5 @@
 import { ViewIcon } from "@chakra-ui/icons"
 import { Button, IconButton, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure } from "@chakra-ui/react"
-import { useEffect } from "react"
 
 const ReUsableModal = ({ user, children }) => {
     const { isOpen, onOpen, onClose } = useDisclosure()

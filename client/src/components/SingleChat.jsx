@@ -1,5 +1,5 @@
 import { ArrowBackIcon } from "@chakra-ui/icons"
-import { Box, FormControl, IconButton, Input, Spinner, Text, useToast } from "@chakra-ui/react"
+import { Box, FormControl, IconButton, Image, Input, Spinner, Text, useToast } from "@chakra-ui/react"
 import { useState } from "react"
 import { getFullUser, getSenderName } from "../ChatLogic/ChatLogic"
 import { ChatState } from "../Context/ChatProvider"
@@ -11,6 +11,8 @@ import io from 'socket.io-client'
 import MessageContainer from "./MessageContainer"
 import animation from '../animations/typing.json'
 import Lottie from 'react-lottie'
+import NoSelectedChat from '../selectChat.jpg'
+
 // Lottie animation
 const defaultOptions = {
     loop: true,
@@ -24,7 +26,7 @@ const defaultOptions = {
 
 
 // Socket Io Implementation
-const END_POINT = 'http://localhost:3001'
+const END_POINT = 'https://lets-gochat.herokuapp.com/'
 var socket, selectedChatCompare
 
 const SingleChat = () => {
@@ -123,9 +125,7 @@ const SingleChat = () => {
 
     useEffect(() => {
         fetchMessages()
-        // console.log("selectedChat", selectedChat)
         selectedChatCompare = selectedChat
-        // console.log('Selected Chat COmpare', selectedChatCompare)
     }, [selectedChat])
 
     // For socket.io
@@ -137,18 +137,14 @@ const SingleChat = () => {
         socket.on('typing stopped', () => setIsTyping(false))
     }, [])
 
-    // console.log(notifications, '------------------------')
     useEffect(() => {
         socket.on('message recieved', (newMessageRecieved) => {
             if (!selectedChatCompare || selectedChatCompare._id !== newMessageRecieved.chat._id) {
                 // Give Notification
-                // console.log("Inside Message recieved if");
                 if (!notifications.includes(newMessageRecieved)) {
                     setNotifications([newMessageRecieved, ...notifications])
                     localStorage.setItem("Chat App Notification", JSON.stringify([newMessageRecieved, ...notifications]))
                     setFetchAgain(!fetchAgain)
-                    // console.log(selectedChatCompare)
-                    // console.log(notifications)
                 }
             } else {
                 setMessages([...messages, newMessageRecieved])
@@ -243,9 +239,7 @@ const SingleChat = () => {
                         justifyContent='center'
                         h='100%'>
 
-                        <Text fontSize={'2xl'}>
-                            Select a Chat to start Chatting
-                        </Text>
+                        <Image src={NoSelectedChat} alt="Select a Chat to start chatting" width={500} height={500} />
                     </Box>)
             }</>
     )

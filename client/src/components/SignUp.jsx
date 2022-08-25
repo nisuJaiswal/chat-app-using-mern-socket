@@ -12,7 +12,7 @@ const SignUp = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [conPass, setConPass] = useState('')
-    const [pic, setPic] = useState('')
+    const [pic, setPic] = useState('https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg')
     const [show, setShow] = useState(false)
     const [showConPass, setShowConPass] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -29,7 +29,7 @@ const SignUp = () => {
 
         setImageLoading(true)
         if (image === 'undefined') {
-            toast({
+            return toast({
                 title: 'Select a profile picture',
                 status: 'warning',
                 duration: 3000,

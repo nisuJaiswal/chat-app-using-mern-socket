@@ -86,7 +86,7 @@ const Login = () => {
             {/* Guest User Button */}
             <Button w='100%' colorScheme='red' variant='outline' fontWeight={500} style={{ marginTop: 14 }}
                 onClick={() => {
-                    setEmail('guestUser')
+                    setEmail('guestUser@gmail.com')
                     setPassword('iAmGuest')
                 }}
             >Guest User</Button>

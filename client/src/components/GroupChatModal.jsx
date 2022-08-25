@@ -150,7 +150,6 @@ const GroupChatModal = ({ children, fetchMessages }) => {
                                         <Spinner />
                                     </Box>) : (
 
-                                    // searchResults.slice(0, 5).map(us => <SearchedUserSingle key={us._id} user={us} handleOnClickFunction={() => addToGroupList(us)} />)
 
                                     searchResults.length > 0 ?
                                         (searchResults.slice(0, 5).map(us => {

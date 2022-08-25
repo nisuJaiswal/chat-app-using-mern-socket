@@ -3,10 +3,8 @@ import { ChatState } from '../Context/ChatProvider'
 import SingleChat from './SingleChat'
 
 const ChatArea = () => {
-    // States
     // Complementry
     const { selectedChat } = ChatState()
-    // Functions
     return (
         <>
             <Box

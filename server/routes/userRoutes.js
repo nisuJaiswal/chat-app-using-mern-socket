@@ -18,8 +18,4 @@ router.route('/').post(register).get(authUser, search)
 router.post('/login', login)
 
 
-
-
-
-
 module.exports = router;
