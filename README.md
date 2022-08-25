@@ -2,8 +2,10 @@
 ##### Link: https://lets-gochat.herokuapp.com/chat
 A Web Application that provides the basic functionality of chatting, made with following technogolies: 
 
-**Frontend:** ReactJs, socket.io-client
+**Frontend:** ReactJs, socket.io-client 
+
 **Backend:** NodeJs, ExpressJs, Socket.io
+
 **Database:** MongoDB
 
 Run the following commands to run: 
@@ -11,7 +13,7 @@ Run the following commands to run:
 npm i
 cd client
 npm i
-cd..
+cd ..
 npm run dev
 ```
 
