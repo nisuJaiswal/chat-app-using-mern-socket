@@ -5,10 +5,12 @@ import { AddIcon } from "@chakra-ui/icons"
 import { useEffect } from "react"
 import { getSenderName } from "../ChatLogic/ChatLogic"
 import GroupChatModal from "./GroupChatModal"
+import { useNavigate } from "react-router-dom"
 const Chats = () => {
     // Complementry
     const { user, selectedChat, setSelectedChat, chats, setChats, fetchAgain } = ChatState()
     const toast = useToast()
+    const history = useNavigate()
 
     // Functions
     const getChats = async () => {
@@ -29,6 +31,9 @@ const Chats = () => {
                 duration: 3000,
                 isClosable: true,
             })
+            localStorage.removeItem('Chat App UserDetails')
+            history('/')
+
         }
     }
 

@@ -9,6 +9,8 @@ const Home = () => {
     useEffect(() => {
         if (localStorage.getItem('Chat App UserDetails')) {
             history('/chat')
+        } else {
+            history('/')
         }
     }, [history])
     return (

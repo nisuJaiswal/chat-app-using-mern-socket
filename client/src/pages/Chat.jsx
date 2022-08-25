@@ -10,7 +10,6 @@ import { ChatState } from "../Context/ChatProvider"
 const Chat = () => {
     const { user } = ChatState()
 
-
     const history = useNavigate()
 
     const fetchedUser = JSON.parse(localStorage.getItem("Chat App UserDetails"))

@@ -36,7 +36,7 @@ const SingleChat = () => {
     const [typing, setTyping] = useState(false)
     const [isTyping, setIsTyping] = useState(false)
     // Complementry
-    const { selectedChat, user, setSelectedChat } = ChatState()
+    const { selectedChat, user, setSelectedChat, notifications, setNotifications } = ChatState()
     const toast = useToast()
 
     //Functions
@@ -79,7 +79,7 @@ const SingleChat = () => {
             socket.emit('typing started', selectedChat._id)
         }
         const lastTypeTime = new Date().getTime()
-        const timerSeconds = 5000
+        const timerSeconds = 3000
         setTimeout(() => {
             let currentTime = new Date().getTime()
             let timeDiff = currentTime - lastTypeTime
@@ -139,6 +139,7 @@ const SingleChat = () => {
         socket.on('message recieved', (newMessageRecieved) => {
             if (!selectedChatCompare || selectedChatCompare._id !== newMessageRecieved.chat._id) {
                 // Give Notification
+
             } else {
                 setMessages([...messages, newMessageRecieved])
             }
