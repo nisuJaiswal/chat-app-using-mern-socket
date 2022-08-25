@@ -3,11 +3,13 @@ import { BellIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import { ChatState } from '../Context/ChatProvider'
 import ReUsableModal from './ReUsableModal'
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import SkeletonLoading from './SkeletonLoading'
 import SearchedUserSingle from './SearchedUserSingle'
+import NotificationBadge from 'react-notification-badge';
 import { getSenderName } from '../ChatLogic/ChatLogic'
+import { Effect } from 'react-notification-badge';
 const Header = () => {
 
     // States
@@ -16,6 +18,7 @@ const Header = () => {
     const [searchResults, setSearchResults] = useState([])
     const [afterSearchRes, setAfterSearchRes] = useState(false)
     const [chatLoading, setChatLoading] = useState(false)
+
     // Complementry
     const { user, setSelectedChat, chats, setChats, notifications, setNotifications } = ChatState()
     const history = useNavigate()
@@ -93,6 +96,13 @@ const Header = () => {
         }
     }
 
+    useEffect(() => {
+        !JSON.parse(localStorage.getItem("Chat App Notification")) ? setNotifications([]) :
+            setNotifications(JSON.parse(localStorage.getItem("Chat App Notification")))
+
+    }, [notifications])
+
+
     return (
         <>
             {/* Main Container */}
@@ -126,7 +136,12 @@ const Header = () => {
                     {/* Notifications */}
                     <Menu>
                         <MenuButton>
-                            <BellIcon fontSize={'2xl'} />
+                            <NotificationBadge
+                                count={notifications.length}
+                                effect={Effect.SCALE}
+                            />
+
+                            <BellIcon fontSize={'3xl'} />
                         </MenuButton>
 
                         <MenuList pl={1}>
@@ -135,16 +150,17 @@ const Header = () => {
 
                             {/* If Notifications */}
                             {
-                                notifications && notifications.map((notif) => (
+                                notifications && notifications.map((notif, index) => (
                                     <MenuItem key={notif._id} onClick={() => {
                                         setSelectedChat(notif.chat)
                                         setNotifications(notifications.filter(
                                             (nt) => nt !== notif))
+                                        localStorage.removeItem("Chat App Notification")
                                     }}>
                                         {notif.chat.isGroupChat ?
                                             `New Notifications in ${notif.chat.chatName}`
                                             :
-                                            `New Notifications in ${getSenderName(user, notif.chat.users)}`
+                                            `New Notifications from ${getSenderName(user, notif.chat.users)}`
                                         }
                                     </MenuItem>
                                 ))

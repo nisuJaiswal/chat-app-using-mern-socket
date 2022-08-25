@@ -4,9 +4,9 @@ import ScrollableFeed from 'react-scrollable-feed'
 import { isLastMessage, isSameSender, isSameSenderMargin, isSameUser } from '../ChatLogic/ChatLogic'
 import { ChatState } from '../Context/ChatProvider'
 const MessageContainer = ({ messages }) => {
-    const { user } = ChatState()
+    const { user, selectedChat } = ChatState()
     return (
-        <ScrollableFeed forceScroll>
+        <ScrollableFeed >
             {
                 messages.map((msg, index) => (
                     <div key={msg._id} style={{ display: 'flex', alignItems: 'center' }}>
@@ -28,18 +28,41 @@ const MessageContainer = ({ messages }) => {
 
                             )
                         }
-                        <span style={{
-                            backgroundColor: user._id === msg.sender._id ? '#BEE3F8' : '#B9F5D0',
-                            borderRadius: '13px',
-                            padding: '5px 16px',
-                            maxWidth: '66%',
-                            marginLeft: isSameSenderMargin(messages, msg, index, user._id),
-                            marginTop: isSameUser(messages, msg, index) ? 3 : 10
-                        }}
+                        {
+                            selectedChat.isGroupChat ?
+                                <span style={{
+                                    backgroundColor: user._id === msg.sender._id ? '#BEE3F8' : '#B9F5D0',
+                                    borderRadius: '13px',
+                                    padding: '5px 16px',
+                                    maxWidth: '66%',
+                                    marginLeft: isSameSenderMargin(messages, msg, index, user._id),
+                                    marginTop: isSameUser(messages, msg, index) ? 3 : 10,
+                                    display: 'flex',
+                                    flexDirection: 'column'
 
-                        >
-                            {msg.content}
-                        </span>
+                                }}
+
+                                >
+                                    {msg.sender.name !== user.name && <b>{msg.sender.name}</b>}
+                                    {msg.content}
+                                </span> :
+                                <span style={{
+                                    backgroundColor: user._id === msg.sender._id ? '#BEE3F8' : '#B9F5D0',
+                                    borderRadius: '13px',
+                                    padding: '5px 16px',
+                                    maxWidth: '66%',
+                                    marginLeft: isSameSenderMargin(messages, msg, index, user._id),
+                                    marginTop: isSameUser(messages, msg, index) ? 3 : 10,
+
+
+                                }}
+
+                                >
+                                    {msg.content}
+                                </span>
+                        }
+
+
                     </div>
                 ))
             }

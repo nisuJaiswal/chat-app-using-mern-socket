@@ -145,6 +145,7 @@ const SingleChat = () => {
                 // console.log("Inside Message recieved if");
                 if (!notifications.includes(newMessageRecieved)) {
                     setNotifications([newMessageRecieved, ...notifications])
+                    localStorage.setItem("Chat App Notification", JSON.stringify([newMessageRecieved, ...notifications]))
                     setFetchAgain(!fetchAgain)
                     // console.log(selectedChatCompare)
                     // console.log(notifications)
