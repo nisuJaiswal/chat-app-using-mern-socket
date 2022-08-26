@@ -2,7 +2,7 @@
 ##### Link: https://lets-gochat.herokuapp.com
 A Web Application that provides the basic functionality of chatting, made with following technogolies: 
 
-**Frontend:** ReactJs, socket.io-client 
+**Frontend:** ReactJs, Chakra-UI, socket.io-client 
 
 **Backend:** NodeJs, ExpressJs, Socket.io
 
